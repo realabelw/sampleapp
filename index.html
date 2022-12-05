@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Document Viewer</title>
+    <!-- <script src="http://localhost:8080/pdftest/js/jquery.min.js"></script> -->
+
+    <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <script type="text/javascript" src="https://mozilla.github.io/pdf.js/build/pdf.worker.js"></script> -->
+
+    <script type="text/javascript" src="http://localhost:8080/pdftest/js/jquery.min.js"></script>
+    <script type="text/javascript" src="http://localhost:8080/pdftest/js/pdf.js"></script>
+    <script type="text/javascript" src="http://localhost:8080/pdftest/js/pdf.worker.js"></script>
+
+    <script>
+
+        $(document).bind('keydown', function (e) {
+            if (e.ctrlKey && (e.which == 83)) {
+                e.preventDefault();
+                return false;
+            }
+
+            if (e.ctrlKey && (e.which == 85)) {
+                e.preventDefault();
+                return false;
+            }
+
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 73)) {
+                e.preventDefault();
+                return false;
+            }
+
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 74)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+
+        document.onkeydown = function (event) {
+            event = (event || window.event);
+
+            if (event.keyCode == 123) {
+                //developer tools : F12
+                return false;
+            }
+            else if (event.which == 17 && event.shiftKey && event.keyCode == 73) {
+                //developer tools ('Entered ctrl+shift+i')
+                return false;  //Prevent from ctrl+shift+i
+            }
+            else if (event.which == 17 && event.shiftKey && event.keyCode == 74) {
+                //developer tools ('Entered ctrl+shift+i')
+                return false;  //Prevent from ctrl+shift+i
+            }
+            else if (event.which == 17 && event.keyCode == 83) {
+                //CTRL+S -- save!
+                return false;
+            }
+        }
+
+
+        document.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            if (event.keyCode == 123) {
+                disableEvent(e);
+            }
+        }, false);
+
+        function disableEvent(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            } else if (window.event) {
+                window.event.cancelBubble = true;
+            }
+        }
+
+        $(document).contextmenu(function () { return false; });
+
+        function disableContextMenu() {
+
+            //window.frames["pdf-js-viewer"].document.oncontextmenu = function () { alert("No way!"); return false; };
+            // Or use this
+            document.getElementById("pdf-js-viewer").contentWindow.document.oncontextmenu = function () { return false; };
+
+            iframeDidLoad();
+
+            document.getElementById("document-title").innerText = getParameterByName('title');
+        }
+
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        function iframeDidLoad() {
+            var siteUrl = 'web/viewer.html?file=http://localhost:8080/document-viewer/' + getParameterByName('doc') + '.pdf#toolbar=0';
+            document.getElementById('pdf-js-viewer').src = siteUrl;
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <style>
+        .doctoolbar {
+            text-align: center;
+            background-color: #1f447f;
+            color: #fff;
+            /* padding: 0 16px; */
+            font-family: 'Arial Rounded MT';
+        }
+    </style>
+    <div class="doctoolbar">
+        <img src="images/logo.png" width="250" />
+        <!-- <h1 style="text-transform:uppercase ;">Document Viewer</h2>
+            <h2 id="document-title" style="text-transform:capitalize ;"> -->
+
+            <h1 id="document-title" style="text-transform:uppercase ;">
+                </h4>
+
+                <div style="height: 76vh;">
+                    <iframe id="pdf-js-viewer" onload="disableContextMenu(); " src="" title="webviewer" frameborder="0"
+                        width="100%" height="100%"></iframe>
+                </div>
+
+    </div>
+</body>
+
+</html>

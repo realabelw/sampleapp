@@ -1,0 +1,149 @@
+<html>
+
+<head>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+
+	<!-- <script src="http://localhost:8080/pdftest/build/pdf.js"></script>
+	<script src="http://localhost:8080/pdftest/js/jquery.min.js"></script> -->
+
+	<script type="text/javascript" src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+	<script type="text/javascript" src="https://mozilla.github.io/pdf.js/build/pdf.worker.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<script>
+		// window.onload = function () {
+
+		// 	var isCtrl = false;
+		// 	document.onkeyup = function (e) {
+		// 		if (e.keyCode == 17) isCtrl = false;
+		// 	}
+
+		// 	document.onkeypress = function (event) {
+		// 		event = (event || window.event);
+
+		// 		if (event.keyCode == 123) {
+		// 			return false;
+		// 		}
+		// 		else if (event.keyCode == 17) isCtrl = true;
+		// 		if (event.keyCode == 83 && isCtrl == true) {
+		// 			//run code for CTRL+S -- ie, save!
+		// 			//disableEvent(event);
+		// 			return false;
+		// 		}
+		// 	}
+
+		// 	document.onmousedown = function (event) {
+		// 		event = (event || window.event);
+		// 		if (event.keyCode == 123) {
+		// 			return false;
+		// 		}
+		// 		else if (event.keyCode == 17) isCtrl = true;
+		// 		if (event.keyCode == 83 && isCtrl == true) {
+		// 			//run code for CTRL+S -- ie, save!
+		// 			//disableEvent(event);
+		// 			return false;
+		// 		}
+		// 	}
+		// 	document.onkeydown = function (event) {
+		// 		event = (event || window.event);
+		// 		if (event.keyCode == 123) {
+		// 			return false;
+		// 		}
+		// 		else if (event.keyCode == 17) isCtrl = true;
+		// 		if (event.keyCode == 83 && isCtrl == true) {
+		// 			//run code for CTRL+S -- ie, save!
+		// 			//disableEvent(event);
+		// 			return false;
+		// 		}
+
+		// 	}
+
+		// 	document.addEventListener("contextmenu", function (e) {
+		// 		e.preventDefault();
+		// 		if (event.keyCode == 123) {
+		// 			disableEvent(e);
+		// 		}
+		// 	}, false);
+
+		// 	function disableEvent(e) {
+		// 		if (e.stopPropagation) {
+		// 			e.stopPropagation();
+		// 		} else if (window.event) {
+		// 			window.event.cancelBubble = true;
+		// 		}
+		// 	}
+		// }
+
+		// $(document).contextmenu(function () { return false; });
+
+
+		//----------------------------------------------------
+		url = "http://localhost:8080/pdftest/test.pdf";
+		var thePdf = null;
+		var scale = 1;
+
+		pdfjsLib.getDocument(url).promise.then(function (pdf) {
+			thePdf = pdf;
+			//console.log(pdf);
+			viewer = document.getElementById('pdf-viewer');
+			for (page = 1; page <= pdf.numPages; page++) {
+				canvas = document.createElement("canvas");
+				canvas.className = 'pdf-page-canvas';
+				viewer.appendChild(canvas);
+				renderPage(page, canvas);
+				// var context = canvas.getContext('2d');
+				// openPage(thePdf, page, context);
+			}
+		});
+
+		function renderPage(pageNumber, canvas) {
+			thePdf.getPage(pageNumber).then(function (page) {
+				viewport = page.getViewport(scale);
+				canvas.height = viewport.height;
+				canvas.width = viewport.width;
+				page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport });
+			});
+		}
+
+		// var pdfFile;
+
+		// pdfjsLib.getDocument(url).then(function (pdf) {
+		// 	pdfFile = pdf;
+
+		// 	for (var i = 1; i <= 4; i++) {
+		// 		var canvas = document.getElementById('canvas' + i);
+		// 		var context = canvas.getContext('2d');
+		// 		PDFJS.disableStream = true;
+		// 		openPage(pdf, i, context);
+		// 	}
+		// });
+
+
+		// function openPage(pdfFile, pageNumber, context) {
+		// 	var scale = 5;
+		// 	pdfFile.getPage(pageNumber).then(function (page) {
+		// 		viewport = page.getViewport(scale);
+		// 		// reference canvas via context
+		// 		var canvas = context.canvas;
+		// 		canvas.width = viewport.width;
+		// 		canvas.height = viewport.height;
+		// 		canvas.style.width = "50%";
+		// 		canvas.style.height = "50%";
+		// 		var renderContext = {
+		// 			canvasContext: context
+		// 			, viewport: viewport
+		// 		};
+		// 		page.render(renderContext);
+		// 	});
+		// }
+
+	</script>
+</head>
+
+<body>
+	<div id="pdf-viewer">
+	</div>
+</body>
+
+</html>
